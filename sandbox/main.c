@@ -1,18 +1,15 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <cz_string.h>
 
 int main(void) {
-	String test1 = string_make("TEST1");
-	printf("%s: %lli\n", test1.chars, test1.length);
-
-	String test2 = string_make("TEST2");
-	printf("%s: %lli\n", test2.chars, test2.length);
-
-	String agian = string_concat(&test1, &test2);
-	printf("%s: %lli\n", agian.chars, agian.length);
-
-	String agian2 = string_concat(&test1, &agian);
-	printf("%s: %lli\n", agian2.chars, agian2.length);
+	HeapString message = heap_string_make("Hello");
+	HeapString message2 = heap_string_make(", world!");
+	HeapString text = heap_string_concat(&message, &message2);
+	printf("%s, %lli\n", text.chars, text.length);
+	heap_string_free(&message);
+	heap_string_free(&message2);
+	heap_string_free(&text);
 
 	return 0;
 }
