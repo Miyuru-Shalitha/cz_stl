@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.26)
 
-project(Base)
+project(cz_stl)
 
 set(CMAKE_C_STANDARD 23)
 
@@ -12,6 +12,6 @@ add_executable(
 
 target_include_directories(
 	Sandbox
-	PUBLIC base
+	PUBLIC cz_stl
 )
 ###### SANDBOX END ######
