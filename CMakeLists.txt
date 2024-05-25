@@ -8,7 +8,7 @@ set(CMAKE_C_STANDARD 23)
 add_executable(
 	Sandbox
 	sandbox/main.c
-)
+  )
 
 target_include_directories(
 	Sandbox

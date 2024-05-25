@@ -1,29 +1,48 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <cz_string.h>
-#include <cz_types.h>
-#include <cz_list.h>
-#include <cz_memory.h>
+#include <cz_threads.h>
+
+static int counter = 0;
+static Mutex mutex;
+
+static void thread_function(void* arg) {
+	int* length = arg;
+
+	for (int i = 0; i < *length; i++) {
+		mutex_lock(&mutex);
+		counter++;
+		mutex_unlock(&mutex);
+	}
+}
+
+static void thread_function2(void* arg) {
+	int* length = arg;
+
+	for (int i = 0; i < *length; i++) {
+		mutex_lock(&mutex);
+		counter++;
+		mutex_unlock(&mutex);
+	}
+}
 
 int main(void) {
-	Arena assets_arena = arena_create(MB(1));
-	char* character = arena_alloc(&assets_arena, sizeof(char));
-	character[0] = 'A';
+	Thread thread;
+	Thread thread2;
 
-	int* numbers = arena_alloc(&assets_arena, sizeof(int) * 2);
-	numbers[0] = 1024;
-	numbers[1] = 2048;
+	int length = 100000;
 
-	printf("%c\n", character[0]);
-	printf("%d\n", numbers[0]);
-	printf("%d\n", numbers[1]);
-	printf("size: %lli, capacity: %lli\n", assets_arena.size, assets_arena.capacity);
+	mutex_init(&mutex);
 
-	arena_reset(&assets_arena);
+	thread_init(&thread, thread_function, &length);
+	thread_init(&thread2, thread_function2, &length);
+	
+	thread_join(&thread);
+	thread_join(&thread2);
 
-	printf("size: %lli, capacity: %lli\n", assets_arena.size, assets_arena.capacity);
+	printf("total: %d\n", counter);
 
-	arena_free(&assets_arena);
+	thread_close(&thread);
+	thread_close(&thread2);
+	mutex_close(&mutex);
 
 	return 0;
 }
