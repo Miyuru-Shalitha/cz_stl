@@ -1,21 +1,22 @@
-#ifndef STRING_HPP
-#define STRING_HPP
+#ifndef STRING_H
+#define STRING_H
 
 #include <stdlib.h>
 #include <stdio.h>
+#include "cz_types.h"
 
 typedef struct {
-	const char* chars;
-	size_t length;
+	usize length;
+	const i8* chars;
 } String;
 
 typedef struct {
-	char* chars;
-	size_t length;
+	usize length;
+	i8* chars;
 } HeapString;
 
-inline String string_make(const char* string) {
-	size_t len = 0;
+inline String string_make(const i8* string) {
+	usize len = 0;
 
 	while (string[len] != '\0') {
 		len++;
@@ -27,14 +28,14 @@ inline String string_make(const char* string) {
 	};
 }
 
-inline HeapString heap_string_make(const char* string) {
-	size_t len = 0;
+inline HeapString heap_string_make(const i8* string) {
+	usize len = 0;
 
 	while (string[len] != '\0') {
 		len++;
 	}
 
-	char* string_space = malloc(len + 1);
+	i8* string_space = malloc(len + 1);
 
 	if (!string_space) {
 		return (HeapString) {
@@ -43,7 +44,7 @@ inline HeapString heap_string_make(const char* string) {
 		};
 	}
 
-	for (unsigned int i = 0; i <= len; i++) {
+	for (u32 i = 0; i <= len; i++) {
 		string_space[i] = string[i];
 	}
 
@@ -60,8 +61,8 @@ inline void heap_string_free(HeapString* string) {
 }
 
 inline HeapString string_concat(String* string_a, String* string_b) {
-	size_t total_length = string_a->length + string_b->length;
-	char* new_string_space = malloc(total_length + 1);
+	usize total_length = string_a->length + string_b->length;
+	i8* new_string_space = malloc(total_length + 1);
 	
 	if (!new_string_space) {
 		return (HeapString) {
@@ -70,11 +71,11 @@ inline HeapString string_concat(String* string_a, String* string_b) {
 		};
 	}
 
-	for (size_t i = 0; i < string_a->length; i++) {
+	for (usize i = 0; i < string_a->length; i++) {
 		new_string_space[i] = string_a->chars[i];
 	}
 
-	for (size_t i = 0; i <= string_b->length; i++) {
+	for (usize i = 0; i <= string_b->length; i++) {
 		new_string_space[string_a->length + i] = string_b->chars[i];
 	}
 
@@ -85,8 +86,8 @@ inline HeapString string_concat(String* string_a, String* string_b) {
 }
 
 inline HeapString heap_string_concat(HeapString* string_a, HeapString* string_b) {
-	size_t total_length = string_a->length + string_b->length;
-	char* new_string_space = malloc(total_length + 1);
+	usize total_length = string_a->length + string_b->length;
+	i8* new_string_space = malloc(total_length + 1);
 
 	if (!new_string_space) {
 		return (HeapString) {
@@ -95,11 +96,11 @@ inline HeapString heap_string_concat(HeapString* string_a, HeapString* string_b)
 		};
 	}
 
-	for (size_t i = 0; i < string_a->length; i++) {
+	for (usize i = 0; i < string_a->length; i++) {
 		new_string_space[i] = string_a->chars[i];
 	}
 
-	for (size_t i = 0; i <= string_b->length; i++) {
+	for (usize i = 0; i <= string_b->length; i++) {
 		new_string_space[string_a->length + i] = string_b->chars[i];
 	}
 
